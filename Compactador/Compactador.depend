@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1637951646 source:c:\users\terad\onedrive\documentos\github\projetohuffmancpp\compactador\main.cpp
+	<iostream>
+	"lista.h"
+	"listacpt.h"
+
+1637952062 c:\users\terad\onedrive\documentos\github\projetohuffmancpp\compactador\lista.h
+
+1637950366 c:\users\terad\onedrive\documentos\github\projetohuffmancpp\compactador\listacpt.h
+	"lista.h"
+
