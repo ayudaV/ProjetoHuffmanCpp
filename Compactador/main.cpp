@@ -1,11 +1,90 @@
 #include <iostream>
 #include "lista.cpp"
 #include "listacpt.cpp"
+#include "listaHuff.cpp"
 using namespace std;
-//a
+
 int main()
 {
+    printf("Digite o nome do arquivo que deseja compactar:\n");
+    char nomeArq[100];
+    scanf("%s", nomeArq);
+
+    char caminho[] = "C:/temp/";
+    strcat(caminho, nomeArq);
+
+    int i;
+
+    system("cls");
+
+    printf("\nLeitura do arquivo situado em %s:\n", caminho);
+
+
+    FILE* arquivo = fopen(caminho, "rb");
+    FILE* lengthFile = fopen(caminho, "r");
+
+    if (arquivo == NULL) {
+        printf("File Not Found!\n");
+        return -1;
+    }
+    /*Obtendo o tamanho do arquivo;*/
+    fseek(lengthFile, 0L, SEEK_END);
+
+    long int tamanhoArq = 10;
+    tamanhoArq = ftell(lengthFile);
+    /*Constroi uma string contendo o texto do arquivo e a tabela de frequencias*/
+    char texto[tamanhoArq];
+    int tabelaDeFrequencia[256] = {0};
+
+    for(i = 0; i < 256; i++)
+    { tabelaDeFrequencia[i] = 0; }
+
+     for( i = 0; i < tamanhoArq; i++){
+        texto[i] = fgetc(arquivo);
+        tabelaDeFrequencia[texto[i]]++;
+    }
+
     int I, N;
+        cout << "\n================================\n"
+         << "Testecom objeto da classe ListaHuff\n"
+         << "================================\n\n";
+    ListaHuff L1;
+    cout << "Entre com 10 numeros separados por espacos:\n";
+    for (I = 1; I <= 10; I++)
+    {
+        cin >> N;
+        L1.Incorpore(N);
+    }
+    cout << "\nEm ordem, os numeros digitados sao:\n"
+         << "L1 = " << L1.NaFormaDeString();
+    cout << "\n\nEntre com um numero para ser excluido da lista original:\n";
+    cin >> N;
+    L1.Descarte(N);
+    cout << "\nEm ordem, apos a exclusao, a lista ficou:\n"
+         << "L1 = " << L1.NaFormaDeString();
+    cout << "\n\nEntre com dois numeros separados por um espaco\n"
+         << "para que seja verificado se pertencem ou nao a lista:\n";
+    cin >> N;
+    if (L1.Contem(N))
+        cout << "O primeiro numero pertence a lista";
+    else
+        cout << "O primeiro numero nao pertence a lista";
+    cin >> N;
+    if (L1.Contem(N))
+        cout << "\nO segundo numero pertence a lista";
+    else
+        cout << "\nO segundo numero nao pertence a lista";
+    Lista L2 = L1;
+    cout << "\n\nFoi feita uma copia de sua lista de numeros;"
+         << "\nVerifique se a copia esta correta:\n"
+         << "L2 = " << L2.NaFormaDeString();
+    Lista L3;
+    L3 = L1;
+    cout << "\n\nFoi feita uma outra copia de sua lista de numeros;"
+         << "\nVerifique se esta outra copia esta correta:\n"
+         << "L3 = " << L3.NaFormaDeString();
+    cout << "\n\n";
+    /*
     cout << "\n================================\n"
          << "Testecom objeto da classe Lista\n"
          << "================================\n\n";
@@ -243,6 +322,6 @@ int main()
     delete PL1;
     delete PL2;
     delete PL3;
-    cout << "\n\n";
+    cout << "\n\n";*/
     return 0;
 }
