@@ -5,21 +5,24 @@ class ListaHuff
 protected:
     typedef struct charNo
     {
-        char Ch;
-        int  Prio;
+        unsigned char Ch;
+        int Prio;
         struct charNo *Esq;
         struct charNo *Dir;
     } charNo;
 
     typedef struct liNo
     {
-        struct charNo Info;
-        struct liNo  *Prox;
+        charNo Info;
+        struct liNo *Prox;
     } liNo;
-    typedef liNo *pNo;
+
+    typedef charNo *pcNo;
+    typedef liNo *plNo;
+
     static char Erro;
     char Valida;
-    pNo Inicio;
+    plNo Inicio;
     void DescarteTudo();
 
 public:
@@ -29,9 +32,12 @@ public:
     ListaHuff(const ListaHuff &);
     ~ListaHuff();
     ListaHuff &operator=(const ListaHuff &);
-    void Incorpore(charNo);
-    virtual int Contem(char) const;
-    virtual void Descarte(char);
+    void Incorpore(unsigned char, int, pcNo, pcNo);
+    void JunteNos();
+    virtual int DescarteDoInicio();
     virtual char *NaFormaDeString() const;
+    int GetAltura(pcNo);
+    void PrintArvore(pcNo, int);
+    void GerarDiagramaDeArvore();
 };
 #endif
