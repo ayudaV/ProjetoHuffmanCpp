@@ -24,6 +24,8 @@ protected:
     char Valida;
     plNo Inicio;
     void DescarteTudo();
+    int GetAltura(pcNo);
+    void PrintArvore(pcNo, int);
 
 public:
     static char DeuErro();
@@ -36,8 +38,6 @@ public:
     void JunteNos();
     virtual int DescarteDoInicio();
     virtual char *NaFormaDeString() const;
-    int GetAltura(pcNo);
-    void PrintArvore(pcNo, int);
     void GerarDiagramaDeArvore();
 };
 #endif

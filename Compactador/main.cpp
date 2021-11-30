@@ -20,27 +20,30 @@ int main()
     //Abre o arquivo e copia todos os bytes para dentro de um vetor
     ifstream Input(filePath, ios::binary);
     vector<BYTE> Buffer(istreambuf_iterator<char>(Input), {});
-
-    //Cria a tabela de frequencia
-    int TabelaDeFrequencia[256] = {0};
-    for (auto i = Buffer.cbegin(); i != Buffer.cend(); ++i)
-        TabelaDeFrequencia[*i]++;
-
-    //system("cls");
-    ListaHuff ListaHuff;
-
-    cout << "\nTabela de Frequencia:\n";
-    for (int i = 0; i < 256; i++)
+    if (Buffer.cbegin() == Buffer.cend())
+        cout << "Arquivo nao encontrado ou arquivo vazio!";
+    else
     {
-        if (TabelaDeFrequencia[i] > 0)
-        {
-            printf("| %c : %d |\n", i, TabelaDeFrequencia[i]);
-            ListaHuff.Incorpore(i, TabelaDeFrequencia[i], NULL, NULL);
-        }
-    }
-    //printf(ListaHuff.NaFormaDeString());
-    ListaHuff.JunteNos();
-    ListaHuff.GerarDiagramaDeArvore();
+        //Cria a tabela de frequencia
+        int TabelaDeFrequencia[256] = {0};
+        for (auto i = Buffer.cbegin(); i != Buffer.cend(); ++i)
+            TabelaDeFrequencia[*i]++;
 
+        //system("cls");
+        ListaHuff ListaHuff;
+
+        cout << "\nTabela de Frequencia:\n";
+        for (int i = 0; i < 256; i++)
+        {
+            if (TabelaDeFrequencia[i] > 0)
+            {
+                printf("| %c : %d |\n", i, TabelaDeFrequencia[i]);
+                ListaHuff.Incorpore(i, TabelaDeFrequencia[i], NULL, NULL);
+            }
+        }
+        //printf(ListaHuff.NaFormaDeString());
+        ListaHuff.JunteNos();
+        ListaHuff.GerarDiagramaDeArvore();
+    }
     return 0;
 }
