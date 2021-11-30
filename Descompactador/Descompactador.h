@@ -1,6 +1,6 @@
-#ifndef ARVORE_H
-#define ARVORE_H
-class Arvore
+#ifndef DESCOMPACTADOR_H
+#define DESCOMPACTADOR_H
+class Descompactador
 {
 protected:
     typedef struct charNo
@@ -14,15 +14,15 @@ protected:
     static char Erro;
     char Valida;
     pcNo Raiz;
-    void DescarteTudo();
+    void DescarteTudo(pcNo);
     void NewArvore(unsigned char[], int *, pcNo);
     int GetAltura(charNo *noAtual);
     void PrintArvore(pcNo, int);
 
 public:
-    Arvore(unsigned char *ArvBuilder);
-    Arvore(const Arvore &);
-    ~Arvore();
+    Descompactador(unsigned char *ArvBuilder);
+    Descompactador(const Descompactador &);
+    ~Descompactador();
 
     static char DeuErro();
     char eValida() const;
@@ -30,4 +30,4 @@ public:
     void Descompactar(unsigned char[], int, unsigned char*);
 };
 
-#endif // ARVORE_H
+#endif // DESCOMPACTADOR_H

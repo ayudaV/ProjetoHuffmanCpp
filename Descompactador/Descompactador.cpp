@@ -1,18 +1,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
-#include "Arvore.h"
-char Arvore::Erro = 0;
+#include "Descompactador.h"
+char Descompactador::Erro = 0;
 
-void Arvore::DescarteTudo()
+void Descompactador::DescarteTudo(pcNo P)
 {
-    for (pcNo P = this->Raiz; this->Raiz != NULL; P = this->Raiz)
+    if (P->Esq != NULL)
     {
-        //Implementar metodo recursivo para deletar a arvore
-        delete P;
+        DescarteTudo(P->Esq);
+        DescarteTudo(P->Dir);
     }
+    delete P;
 }
-void Arvore::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharNo)
+void Descompactador::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharNo)
 {
     pCharNo->Ch = ArvBuilder[(*Pos)];
     pCharNo->Esq = NULL;
@@ -30,16 +31,16 @@ void Arvore::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharNo)
         pCharNo->Dir = pcNoDir;
     }
 };
-Arvore::~Arvore() { this->DescarteTudo(); }
-Arvore::Arvore(unsigned char arvBuilder[]) : Valida(1)
+Descompactador::~Descompactador() { this->DescarteTudo(this->Raiz); }
+Descompactador::Descompactador(unsigned char arvBuilder[]) : Valida(1)
 {
     int pos = 0;
     this->Raiz = new charNo;
     NewArvore(arvBuilder, &pos, this->Raiz);
 }
-Arvore::Arvore(const Arvore &L) : Raiz(NULL), Valida(1) { *this = L; }
+Descompactador::Descompactador(const Descompactador &L) : Raiz(NULL), Valida(1) { *this = L; }
 
-void Arvore::Descompactar(unsigned char Buffer[], int TamTexto, unsigned char *Texto)
+void Descompactador::Descompactar(unsigned char Buffer[], int TamTexto, unsigned char *Texto)
 {
     if (this->Raiz->Ch != NULL)
     {
@@ -58,14 +59,12 @@ void Arvore::Descompactar(unsigned char Buffer[], int TamTexto, unsigned char *T
         {
             if (j % 8 == 0)
             {
-                printf("New Byte\n");
                 Aux = Buffer[nBytes];
                 nBytes++;
             }
 
             if (CountCaminho != 0)
             {
-                printf("Walking\n");
                 if ((Aux & (1 << (j % 8))) == 0)
                     Atual = Atual->Esq;
                 else
@@ -77,20 +76,17 @@ void Arvore::Descompactar(unsigned char Buffer[], int TamTexto, unsigned char *T
             {
                 Texto[nChar] = Atual->Ch;
                 nChar++;
-                printf("New Char: %c, %d\n", Atual->Ch, nChar);
-
                 CountCaminho = 0;
                 Atual = this->Raiz;
             }
         }
     }
-    printf("%s\n", Texto);
 }
 
-char Arvore::DeuErro() { return Arvore::Erro; }
-char Arvore::eValida() const { return this->Valida; }
+char Descompactador::DeuErro() { return Descompactador::Erro; }
+char Descompactador::eValida() const { return this->Valida; }
 
-int Arvore::GetAltura(pcNo Atual)
+int Descompactador::GetAltura(pcNo Atual)
 {
     int AlturaEsq, AlturaDir;
     if (Atual == NULL)
@@ -108,7 +104,7 @@ void Padding(unsigned char ch, int n)
     for (i = 0; i < n; i++)
         putchar(ch);
 }
-void Arvore::PrintArvore(pcNo Atual, int Level)
+void Descompactador::PrintArvore(pcNo Atual, int Level)
 {
     if (Atual == NULL)
     {
@@ -123,7 +119,7 @@ void Arvore::PrintArvore(pcNo Atual, int Level)
         PrintArvore(Atual->Esq, Level + 1);
     }
 }
-void Arvore::GerarDiagramaDeArvore()
+void Descompactador::GerarDiagramaDeArvore()
 {
     int altura = GetAltura(this->Raiz);
     printf("Altura: %d\n", altura);

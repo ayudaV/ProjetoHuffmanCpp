@@ -5,7 +5,7 @@
 #include <iterator>
 #include <vector>
 #include <string.h>
-#include "Arvore.cpp"
+#include "Descompactador.cpp"
 
 using namespace std;
 int main()
@@ -49,19 +49,16 @@ int main()
             i++;
         }
 
-        Arvore Arvore(ArvBuilder);
+        Descompactador Descompactador(ArvBuilder);
 
-        Arvore.GerarDiagramaDeArvore();
+        Descompactador.GerarDiagramaDeArvore();
 
         ofstream Output;
         Output.open(CaminhoSaida, ofstream::out | ofstream::trunc | ofstream::binary);
-        unsigned char Texto[100] = {0};
-
-        Arvore.Descompactar(TextBuffer, TamTexto, Texto);
+        unsigned char Texto[100] = {0}; //Mudar para uma variavel de tamanho do arquivo original
+        Descompactador.Descompactar(TextBuffer, TamTexto, Texto);
         Output << Texto;
         Output.close();
-        printf("SaiU %s", Texto);
-        //Por algum motivo n ta encerrando o programa
     }
     return 0;
 }
