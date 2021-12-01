@@ -8,7 +8,7 @@ class Descompactador
 protected:
     typedef struct charNo
     {
-        unsigned char Ch;
+        BYTE Ch;
         struct charNo *Esq;
         struct charNo *Dir;
     } charNo;
@@ -18,18 +18,18 @@ protected:
     char Valida;
     pcNo Raiz;
     void DescarteTudo(pcNo);
-    void NewArvore(unsigned char[], int *, pcNo);
+    void NewArvore(BYTE[], int *, pcNo);
     int GetAltura(charNo *noAtual);
     void PrintArvore(pcNo, int);
 
 public:
-    Descompactador(unsigned char *ArvBuilder);
+    Descompactador(BYTE *ArvBuilder);
     ~Descompactador();
 
     static char DeuErro();
     char eValida() const;
     void GerarDiagramaDeArvore();
-    void Descompactar(unsigned char[], int, unsigned char*);
+    void Descompactar(BYTE[], int, BYTE*);
 };
 
 #endif // DESCOMPACTADOR_H

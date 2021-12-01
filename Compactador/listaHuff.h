@@ -8,7 +8,7 @@ class ListaHuff
 protected:
     typedef struct charNo
     {
-        unsigned char Ch;
+        BYTE Ch;
         int Prio;
         struct charNo *Esq;
         struct charNo *Dir;
@@ -31,7 +31,7 @@ protected:
     int GetAltura(pcNo);
     void PrintArvore(pcNo, int);
     void GerarCaminhos(pcNo, char[], char **);
-    void GetArvoreComprimida(pcNo, unsigned char*, int*);
+    void GetArvoreComprimida(pcNo, BYTE*, int*);
 
 public:
     static char DeuErro();
@@ -41,12 +41,12 @@ public:
     ListaHuff(const ListaHuff &);
     ~ListaHuff();
 
-    void Incorpore(unsigned char, int, pcNo, pcNo);
+    void Incorpore(BYTE, int, pcNo, pcNo);
     void JunteNos();
     int DescarteDoInicio();
-    unsigned char *NaFormaDeString(int *);
+    BYTE *NaFormaDeString(int *);
     void GerarDiagramaDeArvore();
     void PreencherTabela();
-    unsigned char * Compactar(unsigned char*, int*) 
+    BYTE * Compactar(BYTE*, int, int*);
 };
 #endif

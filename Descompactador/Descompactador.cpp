@@ -17,7 +17,7 @@ void Descompactador::DescarteTudo(pcNo P)
     delete P;
 }
 
-void Descompactador::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharNo)
+void Descompactador::NewArvore(BYTE ArvBuilder[], int *Pos, pcNo pCharNo)
 {
     pCharNo->Ch = ArvBuilder[(*Pos)];
     pCharNo->Esq = NULL;
@@ -38,14 +38,14 @@ void Descompactador::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharN
 
 Descompactador::~Descompactador() { this->DescarteTudo(this->Raiz); }
 
-Descompactador::Descompactador(unsigned char arvBuilder[]) : Valida(1)
+Descompactador::Descompactador(BYTE arvBuilder[]) : Valida(1)
 {
     int pos = 0;
     this->Raiz = new charNo;
     NewArvore(arvBuilder, &pos, this->Raiz);
 }
 
-void Descompactador::Descompactar(unsigned char Buffer[], int TamTexto, unsigned char *Texto)
+void Descompactador::Descompactar(BYTE Buffer[], int TamTexto, BYTE *Texto)
 {
     if (this->Raiz->Ch != NULL)
     {
@@ -54,7 +54,7 @@ void Descompactador::Descompactar(unsigned char Buffer[], int TamTexto, unsigned
     }
     else
     {
-        unsigned char Aux;
+        BYTE Aux;
         pcNo Atual;
         Atual = this->Raiz;
         int CountCaminho = 0;
@@ -105,7 +105,7 @@ int Descompactador::GetAltura(pcNo Atual)
     return 1 + AlturaDir;
 }
 
-void Padding(unsigned char ch, int n)
+void Padding(BYTE ch, int n)
 {
     int i;
     for (i = 0; i < n; i++)

@@ -11,16 +11,16 @@ using namespace std;
 int main()
 {
     //Gera o endereco do arquivo
-    char filePath[] = "C:\\temp\\";
-    char filename[100];
+    char FilePath[] = "C:\\temp\\";
+    char FileName[100];
     cout << "Digite o nome do arquivo a ser descompactado [Sem Extencao]:";
-    cin >> filename;
-    strcat(filePath, filename);
-    strcat(filePath, ".mali");
+    cin >> FileName;
+    strcat(FilePath, Filename);
+    strcat(FilePath, ".mali");
 
     //Abre o arquivo e copia todos os bytes para dentro de um vetor
     ifstream Input(filePath, ios::binary);
-    vector<unsigned char> Buffer(istreambuf_iterator<char>(Input), {});
+    vector<BYTE> Buffer(istreambuf_iterator<char>(Input), {});
     if (Buffer.cbegin() == Buffer.cend())
         cout << "Arquivo nao encontrado ou arquivo vazio!";
     else
@@ -29,8 +29,8 @@ int main()
         int TamArvore = Buffer[(Buffer.size() - 8)];
         int TamTexto = Buffer[(Buffer.size() - 4)];
         char CaminhoSaida[TamSaida + 1] = {0};
-        unsigned char ArvBuilder[TamArvore] = {0};
-        unsigned char TextBuffer[TamTexto] = {0};
+        BYTE ArvBuilder[TamArvore] = {0};
+        BYTE TextBuffer[TamTexto] = {0};
         int i;
         for (i = 0; i < TamSaida; i++)
         {
@@ -54,7 +54,7 @@ int main()
         
         ofstream Output;
         Output.open(CaminhoSaida, ofstream::out | ofstream::trunc | ofstream::binary);
-        unsigned char Texto[100] = {0}; //Mudar para uma variavel de tamanho do arquivo original
+        BYTE Texto[100] = {0}; //Mudar para uma variavel de tamanho do arquivo original
         Descompactador.Descompactar(TextBuffer, TamTexto, Texto);
         Output << Texto;
         Output.close();

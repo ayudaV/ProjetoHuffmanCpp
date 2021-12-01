@@ -46,20 +46,33 @@ int main()
         ListaHuff.GerarDiagramaDeArvore();
         ListaHuff.PreencherTabela();
         int TamArvore = 0;
-        unsigned char *ArvBuilder = ListaHuff.NaFormaDeString(&TamArvore);
+        BYTE *ArvBuilder = ListaHuff.NaFormaDeString(&TamArvore);
 
         char OutFilePath[] = "C:\\temp\\";
-        char OutFileName[100];
+        char OutFileName[50];
         cout << "Digite o nome do arquivo compactado [Sem Extensao]:";
         cin >> OutFileName;
         strcat(OutFilePath, OutFileName);
+        strcat(OutFilePath, ".mali");
         ofstream Output;
         Output.open(OutFilePath, ofstream::out | ofstream::trunc | ofstream::binary);
-        int TamTexto = 0;
-        BYTE *TextoCompactado = ListaHuff.Compactar(Buffer, &TamTexto);
-        Output << Texto;
+        int TamTextoComp = 0;
+        BYTE *ArrayBuffer = new BYTE[Buffer.size()];
+        for (int i = 0; i < Buffer.size(); i++)
+        {
+            ArrayBuffer[i] = Buffer[i];
+        }
+
+        BYTE *TextoCompactado = ListaHuff.Compactar(ArrayBuffer, Buffer.size(), &TamTextoComp);
+        printf("Tamanho compactado: %d", TamTextoComp);
+        //Output << (BYTE)strlen(FileName);
+        Output << (BYTE)Buffer.size();
+        Output << &TamArvore;
+        //Output << (BYTE)TamTextoComp;
+        //Output << FileName;
+        //Output << ArvBuilder;
+        //Output << TextoCompactado;
         Output.close();
-        * /
     }
     return 0;
 }

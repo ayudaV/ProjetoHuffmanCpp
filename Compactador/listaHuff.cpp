@@ -17,10 +17,11 @@ void ListaHuff::DescarteTudo(pcNo P)
     }
     delete P;
 }
+
 void ListaHuff::PreencherTabela()
 {
     this->TabelaCaminhos = new char *[256];
-    int Altura =  GetAltura(&this->Inicio->Info);
+    int Altura = GetAltura(&this->Inicio->Info);
     for (int i = 0; i < 256; i++)
     {
         TabelaCaminhos[i] = new char[Altura];
@@ -57,20 +58,56 @@ void ListaHuff::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminh
     }
 }
 
-void ListaHuff::GetArvoreComprimida(pcNo P, unsigned char *Str, int *Cont)
+void ListaHuff::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
 {
-    Str[(*Cont)] = P->Ch;
-    (*Cont)++;
-    Str[(*Cont)] = 1;
-    (*Cont)++;
-    printf("Ch: %c | True: %c\n", Str[(*Cont) - 2], Str[(*Cont) - 1]);
+    Str[(*Count)] = P->Ch;
+    (*Count)++;
+    Str[(*Count)] = 1;
+    (*Count)++;
+    printf("Ch: %c | True: %c\n", Str[(*Count) - 2], Str[(*Count) - 1]);
 
     if (P->Esq != NULL)
     {
-        GetArvoreComprimida(P->Esq, Str, Cont);
-        GetArvoreComprimida(P->Dir, Str, Cont);
+        GetArvoreComprimida(P->Esq, Str, Count);
+        GetArvoreComprimida(P->Dir, Str, Count);
     }
 }
+
+BYTE *ListaHuff::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
+{
+    *TamComp = 0;
+    BYTE *TextoCompactado = new BYTE[100]; //Arrumar
+    BYTE Aux = 0;
+    int Count = 0;
+    printf("---------------------------\n");
+    printf("Tamanho: %d\n", TamArq);
+
+    for (int i = 0; i < TamArq; i++)
+    {
+        printf("Lendo um Char: %c, Tam Caminho: %d\n", Buffer[i], strlen(TabelaCaminhos[Buffer[i]]));
+        /*Percorre char a char ("bit a bit") o endereco do caracter lido*/
+        for (int j = 0; j < strlen(TabelaCaminhos[Buffer[i]]); j++)
+        {
+            printf("o\n");
+            if ((TabelaCaminhos[Buffer[i]])[j] == '1')
+            {
+                /*Se o codigo do char for 1 ele adiciona 1 bit contendo True*/
+                Aux = Aux | (1 << ((*TamComp) % 8));
+            }
+
+            (*TamComp)++;
+            /*Terminou de ocupar 1 byte, escreve ele e reseta*/
+            if ((*TamComp) % 8 == 0)
+            {
+                TextoCompactado[Count] = Aux;
+                Count++;
+                Aux = 0;
+            }
+        }
+    }
+    return TextoCompactado;
+}
+
 char ListaHuff::DeuErro() { return ListaHuff::Erro; }
 
 char ListaHuff::eValida() const { return this->Valida; }
@@ -89,7 +126,7 @@ ListaHuff::~ListaHuff()
     }
 }
 
-void ListaHuff::Incorpore(unsigned char Ch, int Prio, pcNo Esq, pcNo Dir)
+void ListaHuff::Incorpore(BYTE Ch, int Prio, pcNo Esq, pcNo Dir)
 {
     ListaHuff::Erro = 0;
 
@@ -180,10 +217,10 @@ int ListaHuff::DescarteDoInicio()
 
 //Visuais
 
-unsigned char *ListaHuff::NaFormaDeString(int *Count)
+BYTE *ListaHuff::NaFormaDeString(int *Count)
 {
-    unsigned char *Str;
-    Str = new unsigned char[1024];
+    BYTE *Str;
+    Str = new BYTE[1024];
     ListaHuff::Erro = 0;
     if (!this->Valida)
     {
@@ -207,7 +244,7 @@ int ListaHuff::GetAltura(pcNo Atual)
     return 1 + AlturaDir;
 }
 
-void Padding(unsigned char ch, int n)
+void Padding(BYTE ch, int n)
 {
     int i;
     for (i = 0; i < n; i++)
