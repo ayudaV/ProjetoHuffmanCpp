@@ -7,15 +7,57 @@ using namespace std;
 
 char ListaHuff::Erro = 0;
 
-void ListaHuff::DescarteTudo()
+void ListaHuff::DescarteTudo(pcNo P)
 {
-    for (plNo P = this->Inicio; this->Inicio != NULL; P = this->Inicio)
+    if (P->Esq != NULL)
     {
-        this->Inicio = this->Inicio->Prox;
-        delete P;
+        DescarteTudo(P->Esq);
+        DescarteTudo(P->Dir);
     }
+    delete P;
+}
+void ListaHuff::PreencherTabela(char **TabelaCaminhos)
+{
+    char Caminho[256] = {'0'};
+    GerarCaminhos(&this->Inicio->Info, Caminho, TabelaCaminhos);
 }
 
+void ListaHuff::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminhos)
+{
+    char CaminhoAtual[256] = {0};
+    strcpy(CaminhoAtual, Caminho);
+    if (Atual->Esq == NULL)
+    {
+        char *nCaminhoChar = (char *)malloc(sizeof(strlen(CaminhoAtual)));
+        strcpy(nCaminhoChar, CaminhoAtual);
+        printf("Gerando Caminho: %s\n", nCaminhoChar);
+        TabelaCaminhos[Atual->Ch] = nCaminhoChar;
+    }
+    if (Atual->Esq != NULL)
+    {
+        CaminhoAtual[strlen(Caminho)] = '0';
+        char _Caminho[256];
+        strcpy(_Caminho, CaminhoAtual);
+        GerarCaminhos(Atual->Esq, _Caminho, TabelaCaminhos);
+    }
+    if (Atual->Dir != NULL)
+    {
+        CaminhoAtual[strlen(Caminho)] = '1';
+        char _Caminho[256];
+        strcpy(_Caminho, CaminhoAtual);
+        GerarCaminhos(Atual->Dir, _Caminho, TabelaCaminhos);
+    }
+}
+/*
+void ListaHuff::GetArvoreComprimida(pcNo P, char *Str[], int *Cont)
+{
+    Str[(*Cont)++] = P->Ch;
+    if (P->Esq != NULL)
+    {
+        GetArvoreComprimida(P->Esq, Str, Cont);
+        GetArvoreComprimida(P->Esq, Str, Cont);
+    }
+}*/
 char ListaHuff::DeuErro() { return ListaHuff::Erro; }
 
 char ListaHuff::eValida() const { return this->Valida; }
@@ -24,40 +66,14 @@ ListaHuff::ListaHuff() : Inicio(NULL), Valida(1) {}
 
 ListaHuff::ListaHuff(const ListaHuff &L) : Inicio(NULL), Valida(1) { *this = L; }
 
-ListaHuff::~ListaHuff() { this->DescarteTudo(); }
-
-ListaHuff &ListaHuff::operator=(const ListaHuff &L)
+ListaHuff::~ListaHuff()
 {
-    this->DescarteTudo();
-    this->Valida = 1;
-    ListaHuff::Erro = 0;
-    plNo PT, PL;
-    for (PL = L.Inicio; PL != NULL; PL = PL->Prox)
-        if (this->Inicio == NULL)
-        {
-            if ((this->Inicio = new liNo) == NULL)
-            {
-                this->Valida = 0;
-                ListaHuff::Erro = 1;
-                break;
-            }
-            this->Inicio->Info = PL->Info;
-            this->Inicio->Prox = NULL;
-            PT = this->Inicio;
-        }
-        else
-        {
-            if ((PT->Prox = new liNo) == NULL)
-            {
-                this->Valida = 0;
-                ListaHuff::Erro = 1;
-                break;
-            }
-            PT = PT->Prox;
-            PT->Info = PL->Info;
-            PT->Prox = NULL;
-        }
-    return *this;
+    for (plNo P = this->Inicio; this->Inicio != NULL; P = this->Inicio)
+    {
+        this->Inicio = this->Inicio->Prox;
+        this->DescarteTudo(&this->Inicio->Info);
+        delete P;
+    }
 }
 
 void ListaHuff::Incorpore(unsigned char Ch, int Prio, pcNo Esq, pcNo Dir)
@@ -148,37 +164,25 @@ int ListaHuff::DescarteDoInicio()
     delete P;
     return 1;
 }
+
+int ListaHuff::GetAlturaTotal()
+{
+    int Altura = GetAltura(&this->Inicio->Info);
+    return Altura;
+}
+
 //Visuais
-char *ListaHuff::NaFormaDeString() const
+/*
+void ListaHuff::NaFormaDeString(unsigned char *Str, int *Count) const
 {
     ListaHuff::Erro = 0;
     if (!this->Valida)
     {
         ListaHuff::Erro = 1;
-        return NULL;
     }
-    static char S[16], R[1025];
-    strcpy(R, "");
-    for (plNo P = this->Inicio; P != NULL; P = P->Prox)
-    {
-
-        char C = (P->Info.Ch);
-        int Prio = (P->Info.Prio);
-        printf("%c : %d", C, Prio);
-
-        /*
-        char PrioStr[5];
-        itoa(Prio, PrioStr, 10);
-        strcpy(S, "");
-        strcat(S, &C);
-        strcat(S, " : ");
-        strcat(S, PrioStr);
-        strcat(R, S);
-        strcat(R, P->Prox == NULL ? "" : ", ");*/
-    }
-    return R;
+    GetArvoreComprimida(this->Raiz, Str, Count);
 }
-
+*/
 int ListaHuff::GetAltura(pcNo Atual)
 {
     int AlturaEsq, AlturaDir;
@@ -191,6 +195,7 @@ int ListaHuff::GetAltura(pcNo Atual)
         return 1 + AlturaEsq;
     return 1 + AlturaDir;
 }
+
 void Padding(unsigned char ch, int n)
 {
     int i;
@@ -213,6 +218,7 @@ void ListaHuff::PrintArvore(pcNo Atual, int Level)
         PrintArvore(Atual->Esq, Level + 1);
     }
 }
+
 void ListaHuff::GerarDiagramaDeArvore()
 {
     int altura = GetAltura(&this->Inicio->Info);

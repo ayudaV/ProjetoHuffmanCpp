@@ -50,9 +50,8 @@ int main()
         }
 
         Descompactador Descompactador(ArvBuilder);
-
         Descompactador.GerarDiagramaDeArvore();
-
+        
         ofstream Output;
         Output.open(CaminhoSaida, ofstream::out | ofstream::trunc | ofstream::binary);
         unsigned char Texto[100] = {0}; //Mudar para uma variavel de tamanho do arquivo original

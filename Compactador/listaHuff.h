@@ -16,28 +16,31 @@ protected:
         charNo Info;
         struct liNo *Prox;
     } liNo;
-
     typedef charNo *pcNo;
     typedef liNo *plNo;
 
     static char Erro;
     char Valida;
     plNo Inicio;
-    void DescarteTudo();
+    void DescarteTudo(pcNo);
     int GetAltura(pcNo);
     void PrintArvore(pcNo, int);
+    void GerarCaminhos(pcNo, char[], char **);
 
 public:
     static char DeuErro();
     char eValida() const;
+
     ListaHuff();
     ListaHuff(const ListaHuff &);
     ~ListaHuff();
-    ListaHuff &operator=(const ListaHuff &);
+
     void Incorpore(unsigned char, int, pcNo, pcNo);
     void JunteNos();
-    virtual int DescarteDoInicio();
-    virtual char *NaFormaDeString() const;
+    int DescarteDoInicio();
+    //void NaFormaDeString(unsigned char *, int *) const;
     void GerarDiagramaDeArvore();
+    int GetAlturaTotal();
+    void PreencherTabela(char **);
 };
 #endif

@@ -44,6 +44,21 @@ int main()
         //printf(ListaHuff.NaFormaDeString());
         ListaHuff.JunteNos();
         ListaHuff.GerarDiagramaDeArvore();
+        int Altura = ListaHuff.GetAlturaTotal();
+        printf("Altura: %d", Altura);
+
+        char **TabelaCaminhos;
+        TabelaCaminhos = new char *[256];
+        for (int i = 0; i < 256; i++)
+        {
+            TabelaCaminhos[i] = new char[Altura];
+            memset(TabelaCaminhos[i], 0, Altura);
+        }
+        ListaHuff.PreencherTabela(TabelaCaminhos);
+        for (int i = 0; i < 256; i++)
+        {
+            printf("Cod: %s\n", TabelaCaminhos[i]);
+        }
     }
     return 0;
 }
