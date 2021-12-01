@@ -4,6 +4,7 @@
 #include "listaHuff.h"
 
 using namespace std;
+typedef unsigned char BYTE;
 
 char ListaHuff::Erro = 0;
 
@@ -16,10 +17,17 @@ void ListaHuff::DescarteTudo(pcNo P)
     }
     delete P;
 }
-void ListaHuff::PreencherTabela(char **TabelaCaminhos)
+void ListaHuff::PreencherTabela()
 {
+    this->TabelaCaminhos = new char *[256];
+    int Altura =  GetAltura(&this->Inicio->Info);
+    for (int i = 0; i < 256; i++)
+    {
+        TabelaCaminhos[i] = new char[Altura];
+        memset(TabelaCaminhos[i], 0, Altura);
+    }
     char Caminho[256] = {'0'};
-    GerarCaminhos(&this->Inicio->Info, Caminho, TabelaCaminhos);
+    GerarCaminhos(&this->Inicio->Info, Caminho, this->TabelaCaminhos);
 }
 
 void ListaHuff::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminhos)
@@ -48,16 +56,21 @@ void ListaHuff::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminh
         GerarCaminhos(Atual->Dir, _Caminho, TabelaCaminhos);
     }
 }
-/*
-void ListaHuff::GetArvoreComprimida(pcNo P, char *Str[], int *Cont)
+
+void ListaHuff::GetArvoreComprimida(pcNo P, unsigned char *Str, int *Cont)
 {
-    Str[(*Cont)++] = P->Ch;
+    Str[(*Cont)] = P->Ch;
+    (*Cont)++;
+    Str[(*Cont)] = 1;
+    (*Cont)++;
+    printf("Ch: %c | True: %c\n", Str[(*Cont) - 2], Str[(*Cont) - 1]);
+
     if (P->Esq != NULL)
     {
         GetArvoreComprimida(P->Esq, Str, Cont);
-        GetArvoreComprimida(P->Esq, Str, Cont);
+        GetArvoreComprimida(P->Dir, Str, Cont);
     }
-}*/
+}
 char ListaHuff::DeuErro() { return ListaHuff::Erro; }
 
 char ListaHuff::eValida() const { return this->Valida; }
@@ -165,24 +178,22 @@ int ListaHuff::DescarteDoInicio()
     return 1;
 }
 
-int ListaHuff::GetAlturaTotal()
-{
-    int Altura = GetAltura(&this->Inicio->Info);
-    return Altura;
-}
-
 //Visuais
-/*
-void ListaHuff::NaFormaDeString(unsigned char *Str, int *Count) const
+
+unsigned char *ListaHuff::NaFormaDeString(int *Count)
 {
+    unsigned char *Str;
+    Str = new unsigned char[1024];
     ListaHuff::Erro = 0;
     if (!this->Valida)
     {
         ListaHuff::Erro = 1;
+        return NULL;
     }
-    GetArvoreComprimida(this->Raiz, Str, Count);
+    GetArvoreComprimida(&this->Inicio->Info, Str, Count);
+    return Str;
 }
-*/
+
 int ListaHuff::GetAltura(pcNo Atual)
 {
     int AlturaEsq, AlturaDir;

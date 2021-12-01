@@ -2,6 +2,9 @@
 #include <string.h>
 #include <iostream>
 #include "Descompactador.h"
+
+typedef unsigned char BYTE;
+
 char Descompactador::Erro = 0;
 
 void Descompactador::DescarteTudo(pcNo P)
@@ -13,6 +16,7 @@ void Descompactador::DescarteTudo(pcNo P)
     }
     delete P;
 }
+
 void Descompactador::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharNo)
 {
     pCharNo->Ch = ArvBuilder[(*Pos)];
@@ -31,14 +35,15 @@ void Descompactador::NewArvore(unsigned char ArvBuilder[], int *Pos, pcNo pCharN
         pCharNo->Dir = pcNoDir;
     }
 };
+
 Descompactador::~Descompactador() { this->DescarteTudo(this->Raiz); }
+
 Descompactador::Descompactador(unsigned char arvBuilder[]) : Valida(1)
 {
     int pos = 0;
     this->Raiz = new charNo;
     NewArvore(arvBuilder, &pos, this->Raiz);
 }
-Descompactador::Descompactador(const Descompactador &L) : Raiz(NULL), Valida(1) { *this = L; }
 
 void Descompactador::Descompactar(unsigned char Buffer[], int TamTexto, unsigned char *Texto)
 {
@@ -84,6 +89,7 @@ void Descompactador::Descompactar(unsigned char Buffer[], int TamTexto, unsigned
 }
 
 char Descompactador::DeuErro() { return Descompactador::Erro; }
+
 char Descompactador::eValida() const { return this->Valida; }
 
 int Descompactador::GetAltura(pcNo Atual)
@@ -98,12 +104,14 @@ int Descompactador::GetAltura(pcNo Atual)
         return 1 + AlturaEsq;
     return 1 + AlturaDir;
 }
+
 void Padding(unsigned char ch, int n)
 {
     int i;
     for (i = 0; i < n; i++)
         putchar(ch);
 }
+
 void Descompactador::PrintArvore(pcNo Atual, int Level)
 {
     if (Atual == NULL)
@@ -119,6 +127,7 @@ void Descompactador::PrintArvore(pcNo Atual, int Level)
         PrintArvore(Atual->Esq, Level + 1);
     }
 }
+
 void Descompactador::GerarDiagramaDeArvore()
 {
     int altura = GetAltura(this->Raiz);

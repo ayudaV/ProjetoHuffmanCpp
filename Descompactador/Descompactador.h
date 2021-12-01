@@ -1,5 +1,8 @@
 #ifndef DESCOMPACTADOR_H
 #define DESCOMPACTADOR_H
+
+typedef unsigned char BYTE;
+
 class Descompactador
 {
 protected:
@@ -21,7 +24,6 @@ protected:
 
 public:
     Descompactador(unsigned char *ArvBuilder);
-    Descompactador(const Descompactador &);
     ~Descompactador();
 
     static char DeuErro();

@@ -11,14 +11,14 @@ typedef unsigned char BYTE;
 int main()
 {
     //Gera o endereco do arquivo
-    char filePath[] = "C:\\temp\\";
-    char filename[100];
+    char FilePath[] = "C:\\temp\\";
+    char FileName[100];
     cout << "Digite o nome do arquivo:";
-    cin >> filename;
-    strcat(filePath, filename);
+    cin >> FileName;
+    strcat(FilePath, FileName);
 
     //Abre o arquivo e copia todos os bytes para dentro de um vetor
-    ifstream Input(filePath, ios::binary);
+    ifstream Input(FilePath, ios::binary);
     vector<BYTE> Buffer(istreambuf_iterator<char>(Input), {});
     if (Buffer.cbegin() == Buffer.cend())
         cout << "Arquivo nao encontrado ou arquivo vazio!";
@@ -44,21 +44,22 @@ int main()
         //printf(ListaHuff.NaFormaDeString());
         ListaHuff.JunteNos();
         ListaHuff.GerarDiagramaDeArvore();
-        int Altura = ListaHuff.GetAlturaTotal();
-        printf("Altura: %d", Altura);
+        ListaHuff.PreencherTabela();
+        int TamArvore = 0;
+        unsigned char *ArvBuilder = ListaHuff.NaFormaDeString(&TamArvore);
 
-        char **TabelaCaminhos;
-        TabelaCaminhos = new char *[256];
-        for (int i = 0; i < 256; i++)
-        {
-            TabelaCaminhos[i] = new char[Altura];
-            memset(TabelaCaminhos[i], 0, Altura);
-        }
-        ListaHuff.PreencherTabela(TabelaCaminhos);
-        for (int i = 0; i < 256; i++)
-        {
-            printf("Cod: %s\n", TabelaCaminhos[i]);
-        }
+        char OutFilePath[] = "C:\\temp\\";
+        char OutFileName[100];
+        cout << "Digite o nome do arquivo compactado [Sem Extensao]:";
+        cin >> OutFileName;
+        strcat(OutFilePath, OutFileName);
+        ofstream Output;
+        Output.open(OutFilePath, ofstream::out | ofstream::trunc | ofstream::binary);
+        int TamTexto = 0;
+        BYTE *TextoCompactado = ListaHuff.Compactar(Buffer, &TamTexto);
+        Output << Texto;
+        Output.close();
+        * /
     }
     return 0;
 }
