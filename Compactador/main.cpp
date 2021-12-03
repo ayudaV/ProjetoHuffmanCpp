@@ -4,7 +4,7 @@
 #include <vector>
 #include <string.h>
 
-#include "listaHuff.cpp"
+#include "Compactador.cpp"
 using namespace std;
 typedef unsigned char BYTE;
 
