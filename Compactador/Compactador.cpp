@@ -1,14 +1,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
-#include "listaHuff.h"
+#include "Compactador.h"
 
 using namespace std;
 typedef unsigned char BYTE;
 
-char ListaHuff::Erro = 0;
+char Compactador::Erro = 0;
 
-void ListaHuff::DescarteTudo(pcNo P)
+void Compactador::DescarteTudo(pcNo P)
 {
     if (P->Esq != NULL)
     {
@@ -18,7 +18,7 @@ void ListaHuff::DescarteTudo(pcNo P)
     delete P;
 }
 
-void ListaHuff::PreencherTabela()
+void Compactador::PreencherTabela()
 {
     this->TabelaCaminhos = new char *[256];
     int Altura = GetAltura(&this->Inicio->Info);
@@ -31,34 +31,32 @@ void ListaHuff::PreencherTabela()
     GerarCaminhos(&this->Inicio->Info, Caminho, this->TabelaCaminhos);
 }
 
-void ListaHuff::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminhos)
+void Compactador::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminhos)
 {
     char CaminhoAtual[256] = {0};
     strcpy(CaminhoAtual, Caminho);
     if (Atual->Esq == NULL)
     {
-        char *nCaminhoChar = (char *)malloc(sizeof(strlen(CaminhoAtual)));
+        // printf("Parou com o caminho: %s | tam: %d", Caminho, strlen(CaminhoAtual));
+        char *nCaminhoChar = new char[256];
         strcpy(nCaminhoChar, CaminhoAtual);
-        printf("Gerando Caminho: %s\n", nCaminhoChar);
         TabelaCaminhos[Atual->Ch] = nCaminhoChar;
     }
     if (Atual->Esq != NULL)
     {
+        // printf("Entrando Esq\n");
         CaminhoAtual[strlen(Caminho)] = '0';
-        char _Caminho[256];
-        strcpy(_Caminho, CaminhoAtual);
-        GerarCaminhos(Atual->Esq, _Caminho, TabelaCaminhos);
+        GerarCaminhos(Atual->Esq, CaminhoAtual, TabelaCaminhos);
     }
     if (Atual->Dir != NULL)
     {
+        // printf("Entrando Dir\n");
         CaminhoAtual[strlen(Caminho)] = '1';
-        char _Caminho[256];
-        strcpy(_Caminho, CaminhoAtual);
-        GerarCaminhos(Atual->Dir, _Caminho, TabelaCaminhos);
+        GerarCaminhos(Atual->Dir, CaminhoAtual, TabelaCaminhos);
     }
 }
 
-void ListaHuff::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
+void Compactador::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
 {
     Str[(*Count)] = P->Ch;
     (*Count)++;
@@ -73,10 +71,11 @@ void ListaHuff::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
     }
 }
 
-BYTE *ListaHuff::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
+BYTE *Compactador::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
 {
     *TamComp = 0;
-    BYTE *TextoCompactado = new BYTE[100]; //Arrumar
+    int BytesAlocados = 1024;
+    BYTE *TextoCompactado = new BYTE[BytesAlocados]; // Arrumar
     BYTE Aux = 0;
     int Count = 0;
     printf("---------------------------\n");
@@ -84,11 +83,11 @@ BYTE *ListaHuff::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
 
     for (int i = 0; i < TamArq; i++)
     {
-        printf("Lendo um Char: %c, Tam Caminho: %d\n", Buffer[i], strlen(TabelaCaminhos[Buffer[i]]));
+        //printf("Lendo um Char: %c, Tam Caminho: %d\n", Buffer[i], strlen(TabelaCaminhos[Buffer[i]]));
         /*Percorre char a char ("bit a bit") o endereco do caracter lido*/
         for (int j = 0; j < strlen(TabelaCaminhos[Buffer[i]]); j++)
         {
-            printf("o\n");
+            // printf("o\n");
             if ((TabelaCaminhos[Buffer[i]])[j] == '1')
             {
                 /*Se o codigo do char for 1 ele adiciona 1 bit contendo True*/
@@ -102,21 +101,30 @@ BYTE *ListaHuff::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
                 TextoCompactado[Count] = Aux;
                 Count++;
                 Aux = 0;
+                if (Count == BytesAlocados) //aloca mais espaco na memoria
+                {
+                    printf("Sizeof: %d\n", BytesAlocados);
+                    BytesAlocados *= 2;
+                    BYTE *_TextoCompactado = new BYTE[BytesAlocados];
+                    *_TextoCompactado = *TextoCompactado;
+                    TextoCompactado = _TextoCompactado;
+                }
             }
         }
     }
+    TextoCompactado[Count] = Aux;
     return TextoCompactado;
 }
 
-char ListaHuff::DeuErro() { return ListaHuff::Erro; }
+char Compactador::DeuErro() { return Compactador::Erro; }
 
-char ListaHuff::eValida() const { return this->Valida; }
+char Compactador::eValida() const { return this->Valida; }
 
-ListaHuff::ListaHuff() : Inicio(NULL), Valida(1) {}
+Compactador::Compactador() : Inicio(NULL), Valida(1) {}
 
-ListaHuff::ListaHuff(const ListaHuff &L) : Inicio(NULL), Valida(1) { *this = L; }
+Compactador::Compactador(const Compactador &L) : Inicio(NULL), Valida(1) { *this = L; }
 
-ListaHuff::~ListaHuff()
+Compactador::~Compactador()
 {
     for (plNo P = this->Inicio; this->Inicio != NULL; P = this->Inicio)
     {
@@ -126,20 +134,20 @@ ListaHuff::~ListaHuff()
     }
 }
 
-void ListaHuff::Incorpore(BYTE Ch, int Prio, pcNo Esq, pcNo Dir)
+void Compactador::Incorpore(BYTE Ch, int Prio, pcNo Esq, pcNo Dir)
 {
-    ListaHuff::Erro = 0;
+    Compactador::Erro = 0;
 
     if (!this->Valida)
     {
-        ListaHuff::Erro = 1;
+        Compactador::Erro = 1;
         return;
     }
     if (this->Inicio == NULL)
     {
         if ((this->Inicio = new liNo) == NULL)
         {
-            ListaHuff::Erro = 1;
+            Compactador::Erro = 1;
             return;
         }
         this->Inicio->Info.Ch = Ch;
@@ -154,7 +162,7 @@ void ListaHuff::Incorpore(BYTE Ch, int Prio, pcNo Esq, pcNo Dir)
         plNo N;
         if ((N = new liNo) == NULL)
         {
-            ListaHuff::Erro = 1;
+            Compactador::Erro = 1;
             return;
         }
         N->Info.Ch = Ch;
@@ -175,7 +183,7 @@ void ListaHuff::Incorpore(BYTE Ch, int Prio, pcNo Esq, pcNo Dir)
     }
     if ((N = new liNo) == NULL)
     {
-        ListaHuff::Erro = 1;
+        Compactador::Erro = 1;
         return;
     }
     N->Info.Ch = Ch;
@@ -186,7 +194,7 @@ void ListaHuff::Incorpore(BYTE Ch, int Prio, pcNo Esq, pcNo Dir)
     A->Prox = N;
 }
 
-void ListaHuff::JunteNos()
+void Compactador::JunteNos()
 {
     while (Inicio->Prox != NULL)
     {
@@ -202,11 +210,11 @@ void ListaHuff::JunteNos()
     }
 }
 
-int ListaHuff::DescarteDoInicio()
+int Compactador::DescarteDoInicio()
 {
     if (Inicio == NULL)
     {
-        ListaHuff::Erro = 1;
+        Compactador::Erro = 1;
         return -1;
     }
     plNo P = Inicio;
@@ -215,23 +223,23 @@ int ListaHuff::DescarteDoInicio()
     return 1;
 }
 
-//Visuais
+// Visuais
 
-BYTE *ListaHuff::NaFormaDeString(int *Count)
+BYTE *Compactador::NaFormaDeString(int *Count)
 {
     BYTE *Str;
     Str = new BYTE[1024];
-    ListaHuff::Erro = 0;
+    Compactador::Erro = 0;
     if (!this->Valida)
     {
-        ListaHuff::Erro = 1;
+        Compactador::Erro = 1;
         return NULL;
     }
     GetArvoreComprimida(&this->Inicio->Info, Str, Count);
     return Str;
 }
 
-int ListaHuff::GetAltura(pcNo Atual)
+int Compactador::GetAltura(pcNo Atual)
 {
     int AlturaEsq, AlturaDir;
     if (Atual == NULL)
@@ -251,7 +259,7 @@ void Padding(BYTE ch, int n)
         putchar(ch);
 }
 
-void ListaHuff::PrintArvore(pcNo Atual, int Level)
+void Compactador::PrintArvore(pcNo Atual, int Level)
 {
     if (Atual == NULL)
     {
@@ -267,7 +275,7 @@ void ListaHuff::PrintArvore(pcNo Atual, int Level)
     }
 }
 
-void ListaHuff::GerarDiagramaDeArvore()
+void Compactador::GerarDiagramaDeArvore()
 {
     int altura = GetAltura(&this->Inicio->Info);
     printf("Altura: %d\n", altura);
