@@ -10,54 +10,83 @@
 using namespace std;
 int main()
 {
-    //Gera o endereco do arquivo
+    // Gera o endereco do arquivo
     char FilePath[] = "C:\\temp\\";
     char FileName[100];
     cout << "Digite o nome do arquivo a ser descompactado [Sem Extencao]:";
     cin >> FileName;
-    strcat(FilePath, Filename);
+    strcat(FilePath, FileName);
     strcat(FilePath, ".mali");
+    /*
+        // Abre o arquivo e copia todos os bytes para dentro de um vetor
+        ifstream Input(FilePath, ios::binary);
 
-    //Abre o arquivo e copia todos os bytes para dentro de um vetor
-    ifstream Input(filePath, ios::binary);
-    vector<BYTE> Buffer(istreambuf_iterator<char>(Input), {});
-    if (Buffer.cbegin() == Buffer.cend())
-        cout << "Arquivo nao encontrado ou arquivo vazio!";
+        if (Input)
+        {
+            // get length of file:
+            Input.seekg(0, Input.end);
+            int Length = Input.tellg();
+            Input.seekg(0, Input.beg);
+
+            BYTE *Buffer = new BYTE[Length];
+
+            cout << "Reading " << Length << " characters... ";
+            // read data as a block:
+            Input >> TamSaida;
+            Input >> TamArvore;
+            Input >> TamTexto;
+            printf("%d | %d | %d\n", TamSaida, TamArvore, TamTexto);
+            for(int i = 7; i < Length; i++)
+                Input >> Buffer[i];
+
+            if (Input)
+                cout << "all characters read successfully.";
+            else
+                cout << "error: only " << Input.gcount() << " could be read";
+        }
+
+        vector<BYTE> Buffer(istreambuf_iterator<char>(Input), {});*/
+
+    FILE *Arquivo = fopen(FilePath, "rb");
+    if (Arquivo == NULL)
+        printf("File Not Found!\n");
     else
     {
-        int TamSaida = Buffer[(Buffer.size() - 12)];
-        int TamArvore = Buffer[(Buffer.size() - 8)];
-        int TamTexto = Buffer[(Buffer.size() - 4)];
-        char CaminhoSaida[TamSaida + 1] = {0};
+        fseek(Arquivo, 0L, SEEK_END);
+        int Length = ftell(Arquivo);
+        rewind (Arquivo);
+
+        printf("Tamanho do arquivo: %d bytes\n", Length);
+        BYTE TamSaida;
+        short TamArvore;
+        int TamTexto;
+        fread(&TamSaida, sizeof(BYTE), 1, Arquivo);
+        fread(&TamArvore, sizeof(short), 1, Arquivo);
+        fread(&TamTexto, sizeof(int), 1, Arquivo);
+        printf("%d | %d | %d\n", TamSaida, TamArvore, TamTexto);
+
+        char CaminhoSaida[TamSaida] = {0};
         BYTE ArvBuilder[TamArvore] = {0};
         BYTE TextBuffer[TamTexto] = {0};
-        int i;
-        for (i = 0; i < TamSaida; i++)
-        {
-            CaminhoSaida[i] = Buffer[i];
-        }
-        CaminhoSaida[i + 1] = '\0';
 
-        for (int j = 0; j < TamArvore; j++)
-        {
-            ArvBuilder[j] = Buffer[i];
-            i++;
-        }
-        for (int j = 0; j < TamTexto; j++)
-        {
-            TextBuffer[j] = Buffer[i];
-            i++;
-        }
+        fread(CaminhoSaida, sizeof(char), TamSaida, Arquivo);
+        fread(ArvBuilder, sizeof(BYTE), TamArvore, Arquivo);
+        fread(TextBuffer, sizeof(BYTE), TamTexto, Arquivo);
+
+        printf("%s", TextBuffer);
 
         Descompactador Descompactador(ArvBuilder);
         Descompactador.GerarDiagramaDeArvore();
-        
+
         ofstream Output;
-        Output.open(CaminhoSaida, ofstream::out | ofstream::trunc | ofstream::binary);
-        BYTE Texto[100] = {0}; //Mudar para uma variavel de tamanho do arquivo original
-        Descompactador.Descompactar(TextBuffer, TamTexto, Texto);
+        char OutFilePath[100] = "C:\\temp\\";
+        strcat(OutFilePath, CaminhoSaida);
+
+        Output.open(OutFilePath, ofstream::out | ofstream::trunc | ofstream::binary);
+        BYTE *Texto = Descompactador.Descompactar(TextBuffer, TamTexto);
         Output << Texto;
         Output.close();
+        printf("Acabou");
     }
     return 0;
 }

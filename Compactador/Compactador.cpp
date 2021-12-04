@@ -60,14 +60,18 @@ void Compactador::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
 {
     Str[(*Count)] = P->Ch;
     (*Count)++;
-    Str[(*Count)] = 1;
-    (*Count)++;
-    printf("Ch: %c | True: %c\n", Str[(*Count) - 2], Str[(*Count) - 1]);
-
     if (P->Esq != NULL)
     {
+        Str[(*Count)] = NULL;
+        (*Count)++;
         GetArvoreComprimida(P->Esq, Str, Count);
         GetArvoreComprimida(P->Dir, Str, Count);
+    }
+    else
+    {
+        Str[(*Count)] = 1;
+        (*Count)++;
+        printf("Ch: %d | True: %c\n", Str[(*Count) - 2], Str[(*Count) - 1]);
     }
 }
 
@@ -83,7 +87,7 @@ BYTE *Compactador::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
 
     for (int i = 0; i < TamArq; i++)
     {
-        //printf("Lendo um Char: %c, Tam Caminho: %d\n", Buffer[i], strlen(TabelaCaminhos[Buffer[i]]));
+        // printf("Lendo um Char: %c, Tam Caminho: %d\n", Buffer[i], strlen(TabelaCaminhos[Buffer[i]]));
         /*Percorre char a char ("bit a bit") o endereco do caracter lido*/
         for (int j = 0; j < strlen(TabelaCaminhos[Buffer[i]]); j++)
         {
@@ -101,12 +105,13 @@ BYTE *Compactador::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
                 TextoCompactado[Count] = Aux;
                 Count++;
                 Aux = 0;
-                if (Count == BytesAlocados) //aloca mais espaco na memoria
+                if (Count >= BytesAlocados) // aloca mais espaco na memoria
                 {
                     printf("Sizeof: %d\n", BytesAlocados);
                     BytesAlocados *= 2;
                     BYTE *_TextoCompactado = new BYTE[BytesAlocados];
-                    *_TextoCompactado = *TextoCompactado;
+                    for (int i = 0; i < BytesAlocados / 2; i++)
+                        _TextoCompactado[i] = TextoCompactado[i];
                     TextoCompactado = _TextoCompactado;
                 }
             }
@@ -227,8 +232,7 @@ int Compactador::DescarteDoInicio()
 
 BYTE *Compactador::NaFormaDeString(int *Count)
 {
-    BYTE *Str;
-    Str = new BYTE[1024];
+    BYTE *Str = new BYTE[1024];
     Compactador::Erro = 0;
     if (!this->Valida)
     {

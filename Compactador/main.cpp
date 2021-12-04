@@ -65,19 +65,18 @@ int main()
             ArrayBuffer[i] = Buffer[i];
         }
 
-        BYTE *TextoCompactado = new BYTE[200];
-        TextoCompactado = Compactador.Compactar(ArrayBuffer, Buffer.size(), &TamTextoComp);
-        printf("Tamanho compactado: %d\n", TamTextoComp);
+        BYTE *TextoCompactado = Compactador.Compactar(ArrayBuffer, Buffer.size(), &TamTextoComp);
+        int TamArquivoOriginal = Buffer.size();
+        printf("%d | %d | %d | %d\n", strlen(FileName), Buffer.size(), TamArvore, TamTextoComp);
 
-        Output << (BYTE)strlen(FileName);
-        Output << (BYTE)Buffer.size();
-        Output << (BYTE)TamArvore;
-        Output << (BYTE)TamTextoComp;
-        Output << FileName;
-        for (int i = 0; i < TamArvore; i++)
-            Output << ArvBuilder[i];
-        for (int i = 0; i <= (TamTextoComp - 1) / 8; i++)
-            Output << TextoCompactado[i];
+        Output << (BYTE)strlen(FileName); // Tamanho do nome do arquivo
+        Output.write(reinterpret_cast<const char *>(&TamArvore), sizeof(short));
+        Output.write(reinterpret_cast<const char *>(&TamTextoComp), sizeof(int));
+        Output << FileName; // Nome do arquivo original
+        Output.write(reinterpret_cast<const char *>(ArvBuilder), sizeof(BYTE) * TamArvore);
+        Output.write(reinterpret_cast<const char *>(TextoCompactado), sizeof(BYTE) * (1 + (TamTextoComp - 1) / 8));
+        // for (int i = 0; i <= (TamTextoComp - 1) / 8; i++)
+        // Output << TextoCompactado[i]; // String do texto compactado
 
         printf("Acabou!");
         Output.close();

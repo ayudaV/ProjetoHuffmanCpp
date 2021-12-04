@@ -23,13 +23,13 @@ void Descompactador::NewArvore(BYTE ArvBuilder[], int *Pos, pcNo pCharNo)
     pCharNo->Esq = NULL;
     pCharNo->Dir = NULL;
 
-    if (ArvBuilder[(*Pos)] == NULL)
+    if (ArvBuilder[(*Pos)] == NULL && ArvBuilder[(*Pos) + 1] == NULL)
     {
-        (*Pos)++;
+        (*Pos) += 2;
         pcNo pcNoEsq = new charNo;
         NewArvore(ArvBuilder, Pos, pcNoEsq);
         pCharNo->Esq = pcNoEsq;
-        (*Pos)++;
+        (*Pos) += 2;
         pcNo pcNoDir = new charNo;
         NewArvore(ArvBuilder, Pos, pcNoDir);
         pCharNo->Dir = pcNoDir;
@@ -45,8 +45,10 @@ Descompactador::Descompactador(BYTE arvBuilder[]) : Valida(1)
     NewArvore(arvBuilder, &pos, this->Raiz);
 }
 
-void Descompactador::Descompactar(BYTE Buffer[], int TamTexto, BYTE *Texto)
+BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto)
 {
+    int BytesAlocados = TamTexto;
+    BYTE *Texto = new BYTE[BytesAlocados];
     if (this->Raiz->Ch != NULL)
     {
         for (int j = 0; j < TamTexto; j++)
@@ -83,9 +85,21 @@ void Descompactador::Descompactar(BYTE Buffer[], int TamTexto, BYTE *Texto)
                 nChar++;
                 CountCaminho = 0;
                 Atual = this->Raiz;
+
+                if (nChar >= BytesAlocados) // aloca mais espaco na memoria
+                {
+                    printf("Sizeof: %d\n", BytesAlocados);
+                    BytesAlocados *= 2;
+                    BYTE *_Texto = new BYTE[BytesAlocados];
+                    for (int i = 0; i < BytesAlocados / 2; i++)
+                        _Texto[i] = Texto[i];
+                    Texto = _Texto;
+                }
             }
         }
+        Texto[nChar] = '\0';
     }
+    return Texto;
 }
 
 char Descompactador::DeuErro() { return Descompactador::Erro; }

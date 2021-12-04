@@ -29,7 +29,7 @@ public:
     static char DeuErro();
     char eValida() const;
     void GerarDiagramaDeArvore();
-    void Descompactar(BYTE[], int, BYTE*);
+    BYTE* Descompactar(BYTE[], int);
 };
 
 #endif // DESCOMPACTADOR_H
