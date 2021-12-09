@@ -69,14 +69,13 @@ int main()
         int TamArquivoOriginal = Buffer.size();
         printf("%d | %d | %d | %d\n", strlen(FileName), Buffer.size(), TamArvore, TamTextoComp);
 
-        Output << (BYTE)strlen(FileName); // Tamanho do nome do arquivo
+        BYTE tamanhoNome = strlen(FileName);
+        Output.write(reinterpret_cast<const char *>(&tamanhoNome), sizeof(char));
         Output.write(reinterpret_cast<const char *>(&TamArvore), sizeof(short));
         Output.write(reinterpret_cast<const char *>(&TamTextoComp), sizeof(int));
-        Output << FileName; // Nome do arquivo original
+        Output.write(reinterpret_cast<const char *>(FileName), sizeof(char) * strlen(FileName));
         Output.write(reinterpret_cast<const char *>(ArvBuilder), sizeof(BYTE) * TamArvore);
         Output.write(reinterpret_cast<const char *>(TextoCompactado), sizeof(BYTE) * (1 + (TamTextoComp - 1) / 8));
-        // for (int i = 0; i <= (TamTextoComp - 1) / 8; i++)
-        // Output << TextoCompactado[i]; // String do texto compactado
 
         printf("Acabou!");
         Output.close();

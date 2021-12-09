@@ -45,7 +45,7 @@ Descompactador::Descompactador(BYTE arvBuilder[]) : Valida(1)
     NewArvore(arvBuilder, &pos, this->Raiz);
 }
 
-BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto)
+BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto, int* nChar)
 {
     int BytesAlocados = TamTexto;
     BYTE *Texto = new BYTE[BytesAlocados];
@@ -61,7 +61,7 @@ BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto)
         Atual = this->Raiz;
         int CountCaminho = 0;
         int nBytes = 0;
-        int nChar = 0;
+        *nChar = 0;
         for (int j = 0; j < TamTexto; j++)
         {
             if (j % 8 == 0)
@@ -81,12 +81,12 @@ BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto)
             CountCaminho++;
             if (Atual->Esq == NULL)
             {
-                Texto[nChar] = Atual->Ch;
-                nChar++;
+                Texto[(*nChar)] = Atual->Ch;
+                (*nChar)++;
                 CountCaminho = 0;
                 Atual = this->Raiz;
 
-                if (nChar >= BytesAlocados) // aloca mais espaco na memoria
+                if ((*nChar) >= BytesAlocados) // aloca mais espaco na memoria
                 {
                     printf("Sizeof: %d\n", BytesAlocados);
                     BytesAlocados *= 2;
@@ -97,7 +97,6 @@ BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto)
                 }
             }
         }
-        Texto[nChar] = '\0';
     }
     return Texto;
 }

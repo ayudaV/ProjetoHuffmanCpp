@@ -19,17 +19,17 @@ protected:
     pcNo Raiz;
     void DescarteTudo(pcNo);
     void NewArvore(BYTE[], int *, pcNo);
-    int GetAltura(charNo *noAtual);
+    int GetAltura(charNo *);
     void PrintArvore(pcNo, int);
 
 public:
-    Descompactador(BYTE *ArvBuilder);
+    Descompactador(BYTE *);
     ~Descompactador();
 
     static char DeuErro();
     char eValida() const;
     void GerarDiagramaDeArvore();
-    BYTE* Descompactar(BYTE[], int);
+    BYTE *Descompactar(BYTE[], int, int *);
 };
 
 #endif // DESCOMPACTADOR_H

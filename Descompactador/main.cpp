@@ -59,21 +59,22 @@ int main()
         printf("Tamanho do arquivo: %d bytes\n", Length);
         BYTE TamSaida;
         short TamArvore;
-        int TamTexto;
+        int TamTextoComp;
         fread(&TamSaida, sizeof(BYTE), 1, Arquivo);
         fread(&TamArvore, sizeof(short), 1, Arquivo);
-        fread(&TamTexto, sizeof(int), 1, Arquivo);
-        printf("%d | %d | %d\n", TamSaida, TamArvore, TamTexto);
+        fread(&TamTextoComp, sizeof(int), 1, Arquivo);
+        printf("%d | %d | %d\n", TamSaida, TamArvore, TamTextoComp);
 
         char CaminhoSaida[TamSaida] = {0};
         BYTE ArvBuilder[TamArvore] = {0};
-        BYTE TextBuffer[TamTexto] = {0};
+        BYTE TextBuffer[TamTextoComp] = {0};
 
-        fread(CaminhoSaida, sizeof(char), TamSaida, Arquivo);
+        fread(CaminhoSaida, sizeof(BYTE), TamSaida, Arquivo);
         fread(ArvBuilder, sizeof(BYTE), TamArvore, Arquivo);
-        fread(TextBuffer, sizeof(BYTE), TamTexto, Arquivo);
+        fread(TextBuffer, sizeof(BYTE), TamTextoComp, Arquivo);
 
-        printf("%s", TextBuffer);
+
+        printf("Caminho saida: %s\n", CaminhoSaida);
 
         Descompactador Descompactador(ArvBuilder);
         Descompactador.GerarDiagramaDeArvore();
@@ -83,8 +84,9 @@ int main()
         strcat(OutFilePath, CaminhoSaida);
 
         Output.open(OutFilePath, ofstream::out | ofstream::trunc | ofstream::binary);
-        BYTE *Texto = Descompactador.Descompactar(TextBuffer, TamTexto);
-        Output << Texto;
+        int nChar = 0;
+        BYTE *Texto = Descompactador.Descompactar(TextBuffer, TamTextoComp, &nChar);
+        Output.write(reinterpret_cast<const char *>(Texto), sizeof(char) * nChar);
         Output.close();
         printf("Acabou");
     }
