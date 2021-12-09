@@ -88,7 +88,6 @@ BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto, int* nChar)
 
                 if ((*nChar) >= BytesAlocados) // aloca mais espaco na memoria
                 {
-                    printf("Sizeof: %d\n", BytesAlocados);
                     BytesAlocados *= 2;
                     BYTE *_Texto = new BYTE[BytesAlocados];
                     for (int i = 0; i < BytesAlocados / 2; i++)

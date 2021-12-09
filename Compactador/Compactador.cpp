@@ -37,20 +37,17 @@ void Compactador::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCami
     strcpy(CaminhoAtual, Caminho);
     if (Atual->Esq == NULL)
     {
-        // printf("Parou com o caminho: %s | tam: %d", Caminho, strlen(CaminhoAtual));
         char *nCaminhoChar = new char[256];
         strcpy(nCaminhoChar, CaminhoAtual);
         TabelaCaminhos[Atual->Ch] = nCaminhoChar;
     }
     if (Atual->Esq != NULL)
     {
-        // printf("Entrando Esq\n");
         CaminhoAtual[strlen(Caminho)] = '0';
         GerarCaminhos(Atual->Esq, CaminhoAtual, TabelaCaminhos);
     }
     if (Atual->Dir != NULL)
     {
-        // printf("Entrando Dir\n");
         CaminhoAtual[strlen(Caminho)] = '1';
         GerarCaminhos(Atual->Dir, CaminhoAtual, TabelaCaminhos);
     }
@@ -71,7 +68,6 @@ void Compactador::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
     {
         Str[(*Count)] = 1;
         (*Count)++;
-        printf("Ch: %d | True: %c\n", Str[(*Count) - 2], Str[(*Count) - 1]);
     }
 }
 
@@ -79,27 +75,22 @@ BYTE *Compactador::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
 {
     *TamComp = 0;
     int BytesAlocados = 1024;
-    BYTE *TextoCompactado = new BYTE[BytesAlocados]; // Arrumar
+    BYTE *TextoCompactado = new BYTE[BytesAlocados];
     BYTE Aux = 0;
     int Count = 0;
-    printf("---------------------------\n");
-    printf("Tamanho: %d\n", TamArq);
 
     for (int i = 0; i < TamArq; i++)
     {
-        // printf("Lendo um Char: %c, Tam Caminho: %d\n", Buffer[i], strlen(TabelaCaminhos[Buffer[i]]));
-        /*Percorre char a char ("bit a bit") o endereco do caracter lido*/
+        // Percorre char a char ("bit a bit") o endereco do caracter lido
         for (int j = 0; j < strlen(TabelaCaminhos[Buffer[i]]); j++)
         {
-            // printf("o\n");
             if ((TabelaCaminhos[Buffer[i]])[j] == '1')
             {
-                /*Se o codigo do char for 1 ele adiciona 1 bit contendo True*/
+                // Se o codigo do char for 1 ele adiciona 1 bit contendo True
                 Aux = Aux | (1 << ((*TamComp) % 8));
             }
-
             (*TamComp)++;
-            /*Terminou de ocupar 1 byte, escreve ele e reseta*/
+            // Terminou de ocupar 1 byte, escreve ele e reseta
             if ((*TamComp) % 8 == 0)
             {
                 TextoCompactado[Count] = Aux;
@@ -107,7 +98,6 @@ BYTE *Compactador::Compactar(BYTE *Buffer, int TamArq, int *TamComp)
                 Aux = 0;
                 if (Count >= BytesAlocados) // aloca mais espaco na memoria
                 {
-                    printf("Sizeof: %d\n", BytesAlocados);
                     BytesAlocados *= 2;
                     BYTE *_TextoCompactado = new BYTE[BytesAlocados];
                     for (int i = 0; i < BytesAlocados / 2; i++)
@@ -230,7 +220,7 @@ int Compactador::DescarteDoInicio()
 
 // Visuais
 
-BYTE *Compactador::NaFormaDeString(int *Count)
+BYTE *Compactador::GetArvoreBuilder(int *Count)
 {
     BYTE *Str = new BYTE[1024];
     Compactador::Erro = 0;
