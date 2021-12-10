@@ -53,7 +53,7 @@ void Compactador::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCami
     }
 }
 
-void Compactador::GetArvoreComprimida(pcNo P, BYTE *Str, int *Count)
+void Compactador::GetArvoreComprimida(pcNo P, BYTE *Str, short *Count)
 {
     Str[(*Count)] = P->Ch;
     (*Count)++;
@@ -218,7 +218,7 @@ int Compactador::DescarteDoInicio()
 
 // Visuais
 
-BYTE *Compactador::GetArvoreBuilder(int *Count)
+BYTE *Compactador::GetArvoreBuilder(short *Count)
 {
     BYTE *Str = new BYTE[1024];
     Compactador::Erro = 0;

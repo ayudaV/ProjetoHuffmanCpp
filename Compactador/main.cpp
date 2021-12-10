@@ -43,7 +43,7 @@ int main()
         Compactador.JunteNos();
         // Compactador.GerarDiagramaDeArvore();
         Compactador.PreencherTabela();
-        int TamArvore = 0;
+        short TamArvore = 0;
         BYTE *ArvBuilder = Compactador.GetArvoreBuilder(&TamArvore);
 
         char OutFilePath[100] = "C:\\temp\\";
@@ -61,10 +61,10 @@ int main()
         BYTE *TextoCompactado = Compactador.Compactar(Buffer, TamArquivoOriginal, &TamTextoComp);
 
         BYTE tamanhoNome = strlen(FileName);
-        Output.write(reinterpret_cast<const char *>(&tamanhoNome), sizeof(char));
+        Output.write(reinterpret_cast<const char *>(&tamanhoNome), sizeof(BYTE));
         Output.write(reinterpret_cast<const char *>(&TamArvore), sizeof(short));
         Output.write(reinterpret_cast<const char *>(&TamTextoComp), sizeof(int));
-        Output.write(reinterpret_cast<const char *>(FileName), sizeof(char) * strlen(FileName));
+        Output.write(reinterpret_cast<const char *>(FileName), sizeof(char) * tamanhoNome);
         Output.write(reinterpret_cast<const char *>(ArvBuilder), sizeof(BYTE) * TamArvore);
         Output.write(reinterpret_cast<const char *>(TextoCompactado), sizeof(BYTE) * (1 + (TamTextoComp - 1) / 8));
         Output.close();

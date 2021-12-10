@@ -50,14 +50,14 @@ int main()
         strcat(OutFilePath, CaminhoSaida);
 
         Output.open(OutFilePath, ofstream::out | ofstream::trunc | ofstream::binary);
-        int nChar = 0;
-        BYTE *Texto = Descompactador.Descompactar(TextBuffer, TamTextoComp, &nChar);
-        Output.write(reinterpret_cast<const char *>(Texto), sizeof(char) * nChar);
+        int TamTextoDesc = 0;
+        BYTE *Texto = Descompactador.Descompactar(TextBuffer, TamTextoComp, &TamTextoDesc);
+        Output.write(reinterpret_cast<const char *>(Texto), sizeof(char) * TamTextoDesc);
         Output.close();
         printf("----------------------------------------------------\n");
         printf("Tamanho do arquivo: %d Bytes\n", Length);
         printf("Nome do arquivo descompactado: %s\n", CaminhoSaida);
-        printf("Tamanho do rquivo descompactado: %d Bytes\n", nChar);
+        printf("Tamanho do rquivo descompactado: %d Bytes\n", TamTextoDesc);
         printf("----------------------------------------------------\n");
         cout << "Descompactado com sucesso!\n";
     }

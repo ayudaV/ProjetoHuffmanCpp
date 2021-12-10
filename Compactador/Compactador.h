@@ -31,7 +31,7 @@ protected:
     int GetAltura(pcNo);
     void PrintArvore(pcNo, int);
     void GerarCaminhos(pcNo, char[], char **);
-    void GetArvoreComprimida(pcNo, BYTE *, int *);
+    void GetArvoreComprimida(pcNo, BYTE *, short *);
 
 public:
     static char DeuErro();
@@ -47,7 +47,7 @@ public:
 
     void PreencherTabela();
 
-    BYTE *GetArvoreBuilder(int *);
+    BYTE *GetArvoreBuilder(short *);
     BYTE *Compactar(BYTE *, int, int *);
 
     void GerarDiagramaDeArvore();
