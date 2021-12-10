@@ -117,8 +117,6 @@ char Compactador::eValida() const { return this->Valida; }
 
 Compactador::Compactador() : Inicio(NULL), Valida(1) {}
 
-Compactador::Compactador(const Compactador &L) : Inicio(NULL), Valida(1) { *this = L; }
-
 Compactador::~Compactador()
 {
     for (plNo P = this->Inicio; this->Inicio != NULL; P = this->Inicio)
