@@ -10,8 +10,8 @@ int main()
 {
     system("cls");
     // Gera o endereco do arquivo
-    char FilePath[] = "C:\\temp\\";
-    char FileName[100];
+    char FilePath[100] = "C:\\temp\\";
+    char FileName[50];
     cout << "Digite o nome do arquivo a ser descompactado [Sem Extencao]: ";
     cin >> FileName;
     strcat(FilePath, FileName);
