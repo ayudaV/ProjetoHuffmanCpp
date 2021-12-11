@@ -9,9 +9,9 @@ int main()
 {
     system("cls");
     // Gera o endereco do arquivo
-    char FilePath[] = "C:\\temp\\";
-    char FileName[100];
-    cout << "Digite o nome do arquivo: ";
+    char FilePath[100] = "C:\\temp\\";
+    char FileName[50];
+    cout << "Digite o nome do arquivo [Com Extencao]: ";
     cin >> FileName;
     strcat(FilePath, FileName);
 
@@ -48,7 +48,7 @@ int main()
 
         char OutFilePath[100] = "C:\\temp\\";
         char OutFileName[50];
-        cout << "Digite o nome do arquivo compactado [Sem Extensao]: ";
+        cout << "Digite o nome do arquivo compactado [Sem Extencao]: ";
         cin >> OutFileName;
         strcat(OutFilePath, OutFileName);
         strcat(OutFilePath, ".mali");
