@@ -41,7 +41,7 @@ int main()
                 Compactador.Incorpore(i, TabelaDeFrequencia[i], NULL, NULL);
         }
         Compactador.JunteNos();
-        // Compactador.GerarDiagramaDeArvore();
+        Compactador.GerarDiagramaDeArvore();
         Compactador.PreencherTabela();
         short TamArvore = 0;
         BYTE *ArvBuilder = Compactador.GetArvoreBuilder(&TamArvore);

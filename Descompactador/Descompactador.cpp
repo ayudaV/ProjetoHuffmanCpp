@@ -23,7 +23,7 @@ void Descompactador::NewArvore(BYTE ArvBuilder[], int *Pos, pcNo pCharNo)
     pCharNo->Esq = NULL;
     pCharNo->Dir = NULL;
 
-    if (ArvBuilder[(*Pos)] == NULL && ArvBuilder[(*Pos) + 1] == NULL)
+    if (ArvBuilder[(*Pos) + 1] == NULL)
     {
         (*Pos) += 2;
         pcNo pcNoEsq = new charNo;
@@ -45,14 +45,19 @@ Descompactador::Descompactador(BYTE arvBuilder[]) : Valida(1)
     NewArvore(arvBuilder, &pos, this->Raiz);
 }
 
-BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto, int* nChar)
+BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto, int *nChar)
 {
-    int BytesAlocados = TamTexto;
+    int BytesAlocados = TamTexto / 4; 
     BYTE *Texto = new BYTE[BytesAlocados];
-    if (this->Raiz->Ch != NULL)
+    if (this->Raiz->Esq == NULL)
     {
+        BYTE *_Texto = new BYTE[TamTexto];
+        Texto = _Texto;
         for (int j = 0; j < TamTexto; j++)
+        {
             Texto[j] = this->Raiz->Ch;
+            (*nChar)++;
+        }
     }
     else
     {

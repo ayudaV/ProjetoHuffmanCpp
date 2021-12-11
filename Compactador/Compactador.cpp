@@ -216,8 +216,6 @@ int Compactador::DescarteDoInicio()
     return 1;
 }
 
-// Visuais
-
 BYTE *Compactador::GetArvoreBuilder(short *Count)
 {
     BYTE *Str = new BYTE[1024];
@@ -244,10 +242,11 @@ int Compactador::GetAltura(pcNo Atual)
     return 1 + AlturaDir;
 }
 
+// Visuais
+
 void Padding(BYTE ch, int n)
 {
-    int i;
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
         putchar(ch);
 }
 

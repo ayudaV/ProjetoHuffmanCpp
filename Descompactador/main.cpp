@@ -43,7 +43,7 @@ int main()
         fclose(Arquivo);
 
         Descompactador Descompactador(ArvBuilder);
-        // Descompactador.GerarDiagramaDeArvore();
+        Descompactador.GerarDiagramaDeArvore();
 
         ofstream Output;
         char OutFilePath[100] = "C:\\temp\\";
@@ -57,7 +57,7 @@ int main()
         printf("----------------------------------------------------\n");
         printf("Tamanho do arquivo: %d Bytes\n", Length);
         printf("Nome do arquivo descompactado: %s\n", CaminhoSaida);
-        printf("Tamanho do rquivo descompactado: %d Bytes\n", TamTextoDesc);
+        printf("Tamanho do arquivo descompactado: %d Bytes\n", TamTextoDesc);
         printf("----------------------------------------------------\n");
         cout << "Descompactado com sucesso!\n";
     }

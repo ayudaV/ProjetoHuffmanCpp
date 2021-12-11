@@ -38,7 +38,6 @@ public:
     char eValida() const;
 
     Compactador();
-    Compactador(const Compactador &);
     ~Compactador();
 
     void Incorpore(BYTE, int, pcNo, pcNo);
