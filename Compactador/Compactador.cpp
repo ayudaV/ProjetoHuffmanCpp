@@ -28,10 +28,10 @@ void Compactador::PreencherTabela()
         memset(TabelaCaminhos[i], 0, Altura);
     }
     char Caminho[256] = {'0'};
-    GerarCaminhos(&this->Inicio->Info, Caminho, this->TabelaCaminhos);
+    GerarCaminhos(&this->Inicio->Info, Caminho);
 }
 
-void Compactador::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCaminhos)
+void Compactador::GerarCaminhos(pcNo Atual, char Caminho[256])
 {
     char CaminhoAtual[256] = {0};
     strcpy(CaminhoAtual, Caminho);
@@ -39,17 +39,17 @@ void Compactador::GerarCaminhos(pcNo Atual, char Caminho[256], char **TabelaCami
     {
         char *nCaminhoChar = new char[256];
         strcpy(nCaminhoChar, CaminhoAtual);
-        TabelaCaminhos[Atual->Ch] = nCaminhoChar;
+         this->TabelaCaminhos[Atual->Ch] = nCaminhoChar;
     }
     if (Atual->Esq != NULL)
     {
         CaminhoAtual[strlen(Caminho)] = '0';
-        GerarCaminhos(Atual->Esq, CaminhoAtual, TabelaCaminhos);
+        GerarCaminhos(Atual->Esq, CaminhoAtual);
     }
     if (Atual->Dir != NULL)
     {
         CaminhoAtual[strlen(Caminho)] = '1';
-        GerarCaminhos(Atual->Dir, CaminhoAtual, TabelaCaminhos);
+        GerarCaminhos(Atual->Dir, CaminhoAtual);
     }
 }
 
@@ -121,8 +121,8 @@ Compactador::~Compactador()
 {
     for (plNo P = this->Inicio; this->Inicio != NULL; P = this->Inicio)
     {
+        this->DescarteTudo(&P->Info);
         this->Inicio = this->Inicio->Prox;
-        this->DescarteTudo(&this->Inicio->Info);
         delete P;
     }
 }
@@ -268,7 +268,7 @@ void Compactador::PrintArvore(pcNo Atual, int Level)
 
 void Compactador::GerarDiagramaDeArvore()
 {
-    int altura = GetAltura(&this->Inicio->Info);
-    printf("Altura: %d\n", altura);
-    PrintArvore(&this->Inicio->Info, altura);
+    int Altura = GetAltura(&this->Inicio->Info);
+    printf("Altura: %d\n", Altura);
+    PrintArvore(&this->Inicio->Info, Altura);
 }

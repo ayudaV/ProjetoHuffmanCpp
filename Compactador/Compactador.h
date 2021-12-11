@@ -30,7 +30,7 @@ protected:
     void DescarteTudo(pcNo);
     int GetAltura(pcNo);
     void PrintArvore(pcNo, int);
-    void GerarCaminhos(pcNo, char[], char **);
+    void GerarCaminhos(pcNo, char[]);
     void GetArvoreComprimida(pcNo, BYTE *, short *);
 
 public:
