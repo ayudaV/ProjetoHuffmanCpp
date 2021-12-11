@@ -51,8 +51,7 @@ BYTE *Descompactador::Descompactar(BYTE Buffer[], int TamTexto, int *nChar)
     BYTE *Texto = new BYTE[BytesAlocados];
     if (this->Raiz->Esq == NULL)
     {
-        BYTE *_Texto = new BYTE[TamTexto];
-        Texto = _Texto;
+        Texto = new BYTE[TamTexto];
         for (int j = 0; j < TamTexto; j++)
         {
             Texto[j] = this->Raiz->Ch;

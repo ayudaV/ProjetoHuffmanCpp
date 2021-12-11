@@ -72,7 +72,7 @@ int main()
         printf("----------------------------------------------------\n");
         printf("Tamanho do arquivo: %d Bytes\n", TamArquivoOriginal);
         printf("Tamanho da arvore compactada: %d Bytes\n", TamArvore);
-        printf("Tamanho do arquivo compactado: %d Bytes\n", (TamTextoComp / 8));
+        printf("Tamanho do arquivo compactado: %d Bytes\n", (1 + (TamTextoComp - 1) / 8));
         printf("----------------------------------------------------\n");
         cout << "Compactado com sucesso!\n";
     }
