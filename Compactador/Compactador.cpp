@@ -235,7 +235,7 @@ void Compactador::JunteNos()
     }
 }
 
-//Remove o primeiro no da lista
+// Remove o primeiro no da lista
 int Compactador::DescarteDoInicio()
 {
     if (Inicio == NULL)
@@ -249,7 +249,7 @@ int Compactador::DescarteDoInicio()
     return 1;
 }
 
-//Retorna uma string com a "formula de construcao da arvore" e o tamanho dela
+// Retorna uma string com a "formula de construcao da arvore" e o tamanho dela
 BYTE *Compactador::GetArvoreBuilder(short *Count)
 {
     BYTE *Str = new BYTE[1024];
@@ -259,13 +259,13 @@ BYTE *Compactador::GetArvoreBuilder(short *Count)
         Compactador::Erro = 1;
         return NULL;
     }
-    //chama o metodo GetArvoreComprimida passando o endereco da raiz, 
-    // o endereco da string em que será escrita a formula e o endereco do tamanho dessa string
+    // chama o metodo GetArvoreComprimida passando o endereco da raiz,
+    //  o endereco da string em que será escrita a formula e o endereco do tamanho dessa string
     GetArvoreComprimida(&this->Inicio->Info, Str, Count);
     return Str;
 }
 
-//Percorre a arvore de forma recursiva contando quantos niveis cada folha tem e o final retorna o maior nivel encontrado
+// Percorre a arvore de forma recursiva contando quantos niveis cada folha tem e o final retorna o maior nivel encontrado
 int Compactador::GetAltura(pcNo Atual)
 {
     int AlturaEsq, AlturaDir;
@@ -281,14 +281,14 @@ int Compactador::GetAltura(pcNo Atual)
 
 // Visuais
 
-//Escreve um char especifico n vezes
+// Escreve um char especifico n vezes
 void Padding(BYTE ch, int n)
 {
     for (int i = 0; i < n; i++)
         putchar(ch);
 }
 
-//Percorre a arvore recursivamente escrevendo todos as ramificacoes dela
+// Percorre a arvore recursivamente escrevendo todos as ramificacoes dela
 void Compactador::PrintArvore(pcNo Atual, int Level)
 {
     if (Atual == NULL)
@@ -305,7 +305,7 @@ void Compactador::PrintArvore(pcNo Atual, int Level)
     }
 }
 
-//Imprime na tela a arvore completa
+// Imprime na tela a arvore completa
 void Compactador::GerarDiagramaDeArvore()
 {
     int Altura = GetAltura(&this->Inicio->Info);
